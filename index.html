@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet PA Cities Map</title>
+
+  <!-- Include Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+</head>
+<body>
+
+  <!-- Create the map div -->
+  <div id="map" style="width: 800px; height: 500px;"></div>
+
+  <!-- Include Leaflet JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <script>
+
+    // Map center and zoom level
+    var map = L.map('map').setView([40.5, -77], 7);
+
+    // Tile layer 
+//This base map was selected for both the level of physical detail of the earth's surface (i.e., the visible topography, rivers, cities, etc.). Admittedly, one downside of this map is the lack of political boundaries. Even with Pennsylvania centered, it isn't entirely obvious where the state boundaries lie. This basemap might be better suited to an analysis of cities across state or national boundaries.
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+}).addTo(map);
+
+    // City data
+    var harrisburg = {
+      name: 'Harrisburg', 
+      lat: 40.2732,
+      lng: -76.8867,
+      population: 50135 //population data as well as coordinates were found using a simple google search. Google results cite the US Census Bureau as its source for the population.
+    }
+    
+    var lancaster = {
+      name: 'Lancaster',  
+      lat: 40.0379,
+      lng: -76.3055,
+      population: 57503
+    };
+
+    // Add circle markers
+       L.circle([harrisburg.lat, harrisburg.lng], { //"L.cirlce", found under "Circle -> Creation", creates the circle on the map. The text in brackets[] calls the longitude and latitude of the specified variable (in this case, Harrisburg).
+        radius: harrisburg.population/5, //"radius", found under "Circle -> Options", is used to specify the radius of the circle in meters. "harrisburg.population" calls the population specified above for the variable "harrisburg" to be used to decide the circle's radius. It is then divided by 5 to keep the size reasonable.
+        color: 'gold', //"color", found under "Cirlcle -> Options inherited from Path", is used to specify the color of the circle. Here it is used to specify the color of the circle's outline, while the circle's fill is specified in the next line "fillColor". In the case we didn't want a different colored fill and outline, the "fillColor" line would be unnecessary.
+        fillColor: 'blue',
+        weight: 4
+        
+        }).bindTooltip ("<b>" + 'Name: ' + "</b>" + "<i>" + harrisburg.name  + "</i>" + "<br>" + "<b>" + 'Population: ' + "</b>"  + "<i>" + harrisburg.population + "</i>")
+      .addTo(map);
+    
+      
+      L.circle([lancaster.lat, lancaster.lng], {
+        radius:   lancaster.population/5, //The function "circle" works differently than circle marker, instead of radius being measured in pixels it's measured in meters on the map (according to the leaflet reference).The square root function in this case would make the circles too small to see.
+        color: 'red',
+        fillColor: 'blue',
+        weight: 4
+        
+        }).bindTooltip ("<b>" + 'Name: ' + "</b>" + "<i>" + lancaster.name + "</i>" + "<br>" + "<b>" + 'Population: ' + "</b>"  + "<i>" + lancaster.population + "</i>")
+      .addTo(map);
+    
+    
+  </script>
+
+</body>
+</html>
